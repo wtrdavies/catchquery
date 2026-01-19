@@ -22,14 +22,6 @@ load_dotenv()
 # Get API key from environment variable
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Debug: Check API key (temporary - remove after troubleshooting)
-if OPENROUTER_API_KEY:
-    key_preview = f"{OPENROUTER_API_KEY[:10]}...{OPENROUTER_API_KEY[-8:]}"
-    st.sidebar.text(f"API Key loaded: {key_preview}")
-    st.sidebar.text(f"Key length: {len(OPENROUTER_API_KEY)}")
-else:
-    st.sidebar.text("API Key: NOT FOUND")
-
 if not OPENROUTER_API_KEY:
     st.error("""
     **Missing API Key**
