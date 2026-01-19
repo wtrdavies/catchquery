@@ -22,7 +22,14 @@
       "Bash(cd /Users/willdavies/Library/Mobile\\\\ Documents/com~apple~CloudDocs/claude_code_main_folder/coding_projects/landings_tool && pip3 install:*)",
       "Bash(grep:*)",
       "Bash(lsof:*)",
-      "Bash(xargs kill:*)"
+      "Bash(xargs kill:*)",
+      "Bash(pgrep:*)",
+      "Bash(streamlit run:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
