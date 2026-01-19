@@ -1,0 +1,10 @@
+[theme]
+primaryColor = "#1E5A8E"              # Deep ocean blue (buttons, links)
+backgroundColor = "#FFFFFF"            # Pure white (main background)
+secondaryBackgroundColor = "#E8F4F8"  # Light blue-grey (sidebar, widgets)
+textColor = "#1A3A52"                 # Dark blue-grey (text)
+font = "sans-serif"
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"

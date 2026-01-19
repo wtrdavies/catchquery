@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(sqlite3:*)",
+      "Bash(python test_query.py:*)",
+      "Bash(python3:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(ls:*)",
+      "Bash(timeout 45s python3:*)",
+      "Bash(tee:*)",
+      "Bash(if [ -f conversion.log ])",
+      "Bash(then cat conversion.log)",
+      "Bash(else echo \"No log file yet\")",
+      "Bash(fi)",
+      "Bash(ps:*)",
+      "Bash(if [ -f data/landings_2014-2024.csv ])",
+      "Bash(then echo \"✓ CSV created!\")",
+      "Bash(else ps -p 2618 -o time,%cpu,%mem)",
+      "Bash(cd:*)",
+      "Bash(cd /Users/willdavies/Library/Mobile\\\\ Documents/com~apple~CloudDocs/claude_code_main_folder/coding_projects/landings_tool:*)",
+      "Bash(cd /Users/willdavies/Library/Mobile\\\\ Documents/com~apple~CloudDocs/claude_code_main_folder/coding_projects/landings_tool && pip3 install:*)",
+      "Bash(grep:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)"
+    ]
+  }
+}

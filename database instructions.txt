@@ -1,0 +1,94 @@
+ I'll explain how to use the load_data.py script to load your MMO data files into the database.
+
+  How to Load Data into the Database
+
+  The load_data.py script processes ODS or Excel files from the MMO and loads them into SQLite.
+
+  Step 1: Organize Your Data
+
+  Create a data folder and put your MMO data files in it:
+
+  cd /Users/willdavies/Library/Mobile\ Documents/com~apple~CloudDocs/coding_projects/landings_tool
+  mkdir -p data
+
+  Then copy your MMO ODS or XLSX files into the data folder. For example:
+  - data/2024_data.ods
+  - data/2023_data.xlsx
+  - data/2022_data.ods
+  - etc.
+
+  Step 2: Run the Data Loader
+
+  Basic usage (uses default paths):
+  python load_data.py
+
+  This will:
+  - Look for data files in ./data/
+  - Create/overwrite ./mmo_landings.db
+
+  Custom paths:
+  python load_data.py /path/to/data/folder /path/to/output.db
+
+  For example:
+  python load_data.py ./mmo_data ./my_database.db
+
+  What the Script Does
+
+  1. Finds all data files - Searches for .ods and .xlsx files in the data folder
+  2. Loads each file - Reads the "Data" sheet from each file
+  3. Standardizes columns - Converts column names to match the schema (year, month, port, species_name, etc.)
+  4. Combines data - Merges all files into one dataset
+  5. Removes duplicates - Cleans up any duplicate rows
+  6. Creates database - Builds SQLite database with indexes
+  7. Shows summary - Displays statistics about the loaded data
+
+  Expected Output
+
+  You should see something like:
+
+  Found 3 data file(s)
+  ==================================================
+    Loading: 2024_data.ods
+      Loaded 64,523 rows
+    Loading: 2023_data.ods
+      Loaded 62,108 rows
+    Loading: 2022_data.ods
+      Loaded 58,947 rows
+
+  Combining datasets...
+  Total rows: 185,578
+  Removed 234 duplicate rows
+
+  Creating database: ./mmo_landings.db
+  Creating indexes...
+
+  ==================================================
+  DATABASE SUMMARY
+  ==================================================
+  Total records: 185,344
+  Year range: 2022 - 2024
+  Unique ports: 509
+  Unique species: 174
+  Total value (£m): 1,234.5
+  Total weight (kt): 567.8
+
+  Database saved to: ./mmo_landings.db
+
+  Important Notes
+
+  1. Data Sheet Requirement - The script expects a sheet named "Data" in each file
+  2. Column Names - The script handles common MMO column name variations
+  3. Overwrites Database - Running the script replaces the existing database completely
+  4. Requirements - Make sure you have the dependencies installed:
+  pip install pandas openpyxl odfpy
+
+  Troubleshooting
+
+  If you get an error about missing dependencies:
+  pip install -r requirements.txt
+
+  If files aren't being found:
+  # Check what's in your data folder
+  ls -la data/
+
+  If the "Data" sheet isn't found, check the sheet names in your file - they might be named differently. You may need to edit the script at line 38 to match your sheet names.

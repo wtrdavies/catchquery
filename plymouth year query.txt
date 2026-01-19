@@ -1,0 +1,125 @@
+❯ test the Plymouth 2020-2022 query 
+
+⏺ I'll test the Plymouth 2020-2022 query that was identified as problematic. Let me run it against your database to show what the correct results should be.
+
+⏺ Bash(sqlite3 mmo_landings.db "SELECT species_name,
+      ROUND(SUM(live_weight_tonnes), 2) as total_tonnes,
+      ROUND(SUM(value_thousands) * 1000, 2) as total_value_pounds FRO…)
+  ⎿  Scallops|6602.9|9548909.24       
+     Monks or Anglers|627.32|1959949.0
+     Cuttlefish|396.61|1296177.7
+     … +2 lines (ctrl+o to expand)
+
+⏺ Perfect! The correct SQL works and returns the expected results:
+
+  Top 5 species landed in Plymouth (2020-2022):
+  1. Scallops - 6,602.90 tonnes (£9,548,909)
+  2. Monks or Anglers - 627.32 tonnes (£1,959,949)
+  3. Cuttlefish - 396.61 tonnes (£1,296,178)
+  4. Pilchards - 392.95 tonnes (£167,633)
+  5. Lemon Sole - 351.23 tonnes (£1,426,866)
+
+  Now let me test what your current system actually generates for this query:
+
+⏺ Write(test_query.py)
+  ⎿  Wrote 101 lines to test_query.py                                
+     """
+     Quick test script to check what SQL the current system generates
+     """
+     import os
+     import requests
+     from dotenv import load_dotenv
+     load_dotenv()
+     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+     … +91 lines (ctrl+o to expand)
+
+⏺ Bash(cd "/Users/willdavies/Library/Mobile                          timeout: 
+      Documents/com~apple~CloudDocs/coding_projects/landings_tool"   15s
+      && python test_query.py)
+  ⎿  Error: Exit code 127
+     (eval):1: command not found: python
+
+⏺ Bash(cd "/Users/willdavies/Library/Mobile                           timeout: 
+      Documents/com~apple~CloudDocs/coding_projects/landings_tool"    15s
+      && python3 test_query.py)
+  ⎿ Testing question: 'list top five species landed in plymouth between 202
+    0-2022'
+    =======================================================================
+    … +38 lines (ctrl+o to expand)
+
+
+
+⏺ Excellent! This reveals the problem. The current system generates SQL that has several issues:
+
+  Generated SQL Problems:
+  1. ❌ Groups by species_name, year - This splits results by year instead of aggregating across 2020-2022
+  2. ❌ Uses landed_weight_tonnes instead of live_weight_tonnes
+  3. ❌ Limits to 20 rows instead of 5
+  4. ❌ Includes year column which wasn't requested
+
+  Let me run both queries to show the difference:
+
+⏺ Bash(cd "/Users/willdavies/Library/Mobile
+      Documents/com~apple~CloudDocs/coding_projects/landings_tool" && sqlite3
+      mmo_landings.db "SELECT species_name, year, ROUND(S…)
+  ⎿  Scallops|2022|3434.73|5082096.78
+     Scallops|2021|2939.62|4466812.46
+     Pilchards|2021|392.94|167610.73
+     … +7 lines (ctrl+o to expand)
+
+⏺ Perfect! This clearly shows the issue:
+
+  Test Results: Plymouth 2020-2022 Query
+
+  What the User Asked:
+
+  "list top five species landed in plymouth between 2020-2022"
+
+  What the Current System Generated (INCORRECT):
+
+  SELECT
+      species_name,
+      year,                              -- ❌ Shouldn't include year
+      ROUND(SUM(landed_weight_tonnes), 2) as total_tonnes,
+      ROUND(SUM(value_thousands) * 1000, 2) as total_value_pounds
+  FROM landings
+  WHERE port = 'Plymouth'
+      AND year BETWEEN 2020 AND 2022
+  GROUP BY species_name, year          -- ❌ Groups by year, splitting results
+  ORDER BY SUM(landed_weight_tonnes) DESC
+  LIMIT 20                              -- ❌ Should be 5
+
+  Results (WRONG):
+  - Scallops 2022: 3,434.73 tonnes
+  - Scallops 2021: 2,939.62 tonnes
+  - Pilchards 2021: 392.94 tonnes
+  - (Scallops split across years instead of totaled)
+
+  What It Should Generate (CORRECT):
+
+  SELECT species_name,
+         ROUND(SUM(live_weight_tonnes), 2) as total_tonnes,
+         ROUND(SUM(value_thousands) * 1000, 2) as total_value_pounds
+  FROM landings
+  WHERE port = 'Plymouth'
+    AND year BETWEEN 2020 AND 2022
+  GROUP BY species_name                 -- ✓ Only group by species
+  ORDER BY total_tonnes DESC
+  LIMIT 5
+
+  Results (CORRECT):
+  1. Scallops: 6,602.90 tonnes (£9,548,909)
+  2. Monks or Anglers: 627.32 tonnes (£1,959,949)
+  3. Cuttlefish: 396.61 tonnes (£1,296,178)
+  4. Pilchards: 392.95 tonnes (£167,633)
+  5. Lemon Sole: 351.23 tonnes (£1,426,866)
+
+  ---
+  The Problem
+
+  The current SYSTEM_PROMPT has a rule that says "Include year in results unless the question is explicitly about a specific year." This causes the model to:
+  1. Add year to the SELECT
+  2. Add year to the GROUP BY
+  3. This splits the aggregation by year instead of totaling across the date range
+
+  This is exactly the kind of issue you'll want to address when you consult with Claude Opus 4.5 using the consultation document!
