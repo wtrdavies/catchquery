@@ -509,8 +509,6 @@ def check_password():
 
     # First run: show password input
     if "password_correct" not in st.session_state:
-        st.markdown("## CatchQuery UK - Access Required")
-        st.markdown("This tool is password-protected. Please enter the access password to continue.")
         st.text_input(
             "Password",
             type="password",
@@ -518,14 +516,10 @@ def check_password():
             key="password",
             help="Contact the administrator if you need the password"
         )
-        st.markdown("---")
-        st.markdown("*CatchQuery UK - Natural language interface for MMO fish landing statistics*")
         return False
 
     # Password incorrect: show error and input again
     elif not st.session_state["password_correct"]:
-        st.markdown("## CatchQuery UK - Access Required")
-        st.markdown("This tool is password-protected. Please enter the access password to continue.")
         st.text_input(
             "Password",
             type="password",
@@ -534,8 +528,6 @@ def check_password():
             help="Contact the administrator if you need the password"
         )
         st.error("Password incorrect. Please try again.")
-        st.markdown("---")
-        st.markdown("*CatchQuery UK - Natural language interface for MMO fish landing statistics*")
         return False
 
     # Password correct
