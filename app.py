@@ -606,8 +606,8 @@ st.markdown("""
     }
 
     /* Professional typography */
-    * {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    body, p, div, h1, h2, h3, h4, h5, h6, span, label, input, button {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     /* Title styling */
@@ -778,10 +778,13 @@ if run_button and question and not reset_button:
                 st.markdown(f"**About this data**: {description}")
 
                 st.caption(f"Query executed in {elapsed:.2f} seconds")
+                st.markdown("")  # Add spacing
 
                 # SQL display in collapsible expander (after results)
                 with st.expander("View Generated SQL", expanded=False):
                     st.code(sql, language="sql")
+
+                st.markdown("")  # Add spacing
 
                 # Option to download
                 csv = df.to_csv(index=False)
